@@ -1,7 +1,7 @@
 generate:
 	@echo "Creating Exacutable"
-	@gcc main.c sum.c -o main
+	@gcc main.c -o server
 
 clean: 
 	@echo "Cleaning up files"
-	@rm main
+	@rm server
