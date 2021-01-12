@@ -1,11 +1,11 @@
-generate_http_server:
-	@echo "Creating Exacutable Server"
-	@gcc http_server.c -o httpServer
+generate:
+	@echo "Creating Exacutable"
+	@gcc ./src/app.c -o server
 
-generate_http_client:
-	@echo "Creating Exacutable Client"
-	@gcc http_client.c -o httpClient
+debug:
+	@echo "Debug Creation"
+	@gcc -g ./src/app.c -o server
 
-clean: 
-	@echo "Cleaning up files"
-	@rm server client httpServer
+clean: server
+	@echo "Cleaning up Files"
+	rm server
