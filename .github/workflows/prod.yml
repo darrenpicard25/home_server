@@ -12,12 +12,12 @@ jobs:
   changes:
     runs-on: ubuntu-latest
     outputs:
-      user_service: ${{ steps.changes.outputs.user_service }}
-      beer_service: ${{ steps.changes.outputs.beer_service }}
+      user_service: ${{ steps.filter.outputs.user_service }}
+      beer_service: ${{ steps.filter.outputs.beer_service }}
     steps:
       - uses: actions/checkout@v3
       - uses: dorny/paths-filter@v2
-        id: changes
+        id: filter
         with:
           filters: |
             user_service:
@@ -46,7 +46,7 @@ jobs:
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
   deploy:
-    needs: [user_service_build]
+    needs: [user_service_build, beer_service_build]
     runs-on: ubuntu-latest
 
     steps:
