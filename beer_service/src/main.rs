@@ -18,19 +18,19 @@ async fn handler_hello(Query(params): Query<HelloParams>) -> impl IntoResponse {
     println!("->> {:12} - hello handler: {:?}", "HANDLER", params);
     let name = params.name.as_deref().unwrap_or("World");
 
-    format!("Hello, {name}!. From User-Service")
+    format!("Hello, {name}! From Beer Service")
 }
 
 // e.g. `/hello/Darren`
 async fn handler_hello_2(Path(name): Path<String>) -> impl IntoResponse {
     println!("->> {:12} - hello handler 2: {:?}", "HANDLER", name);
 
-    format!("Hello, {name}! From handler 2 from User-Service")
+    format!("Hello, {name}! From handler 2 in Beer Service")
 }
 
 #[tokio::main]
 async fn main() {
-    const PORT: u16 = 3000;
+    const PORT: u16 = 3001;
     const ADDRESS: Ipv4Addr = Ipv4Addr::UNSPECIFIED;
 
     println!("Starting Service on {:?}:{}", ADDRESS, PORT);

@@ -19,6 +19,15 @@ services:
     depends_on:
       - database
 
+  beer_service:
+    image: user_service/latest
+    build: ./beer_service
+    ports:
+      - "3001:3001"
+    depends_on:
+      - database
+
+
 volumes:
   home_server_db:
     driver: local
