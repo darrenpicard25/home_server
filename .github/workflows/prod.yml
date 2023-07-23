@@ -12,7 +12,8 @@ jobs:
   changes:
     runs-on: ubuntu-latest
     outputs:
-      user_service: ${{ steps.changes.outputs.src }}
+      user_service: ${{ steps.changes.outputs.user_service }}
+      beer_service: ${{ steps.changes.outputs.beer_service }}
     steps:
       - uses: actions/checkout@v3
       - uses: dorny/paths-filter@v2
@@ -21,6 +22,8 @@ jobs:
           filters: |
             user_service:
               - 'user_service/**'
+            beer_service:
+              - 'beer_service/**'
 
   user_service_build:
     needs: changes
@@ -28,6 +31,16 @@ jobs:
     uses: ./.github/workflows/reusable-ci.yml
     with:
       service-name: "user_service"
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+  beer_service_build:
+    needs: changes
+    if: ${{ needs.changes.outputs.beer_service == 'true' }}
+    uses: ./.github/workflows/reusable-ci.yml
+    with:
+      service-name: "beer_service"
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
