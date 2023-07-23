@@ -1,0 +1,67 @@
+name: "Build Test and Deploy to Production"
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  SQLX_OFFLINE: true
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      user_service: ${{ steps.changes.outputs.src }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            user_service:
+              - 'user_service/**'
+
+  user_service_build:
+    needs: changes
+    if: ${{ needs.changes.outputs.user_service == 'true' }}
+    uses: ./.github/workflows/reusable-ci.yml
+    with:
+      service-name: "user_service"
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+  deploy:
+    needs: [user_service_build]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Install sshpass
+        run: sudo apt-get install sshpass
+
+      - name: Copy docker-compose.yml to droplet
+        run: sshpass -v -p ${{ secrets.DROPLET_PASSWORD }} scp -o StrictHostKeyChecking=no docker-compose.yml root@${{ vars.DROPLET_IP }}:~
+
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ vars.DROPLET_IP }}
+          username: root
+          password: ${{ secrets.DROPLET_PASSWORD }}
+          script: |
+            cd ~
+            export POSTGRES_USER=${{ secrets.POSTGRES_USER }}
+            export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+            docker-compose down
+            docker-compose pull
+            docker-compose up -d
