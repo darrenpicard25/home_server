@@ -47,6 +47,11 @@ jobs:
 
   deploy:
     needs: [user_service_build, beer_service_build]
+    if: |
+      always() &&
+      (needs.user_service_build.result == 'success' || needs.user_service_build.result == 'skipped') &&
+      (needs.beer_service_build.result == 'success' || needs.beer_service_build.result == 'skipped')
+
     runs-on: ubuntu-latest
 
     steps:
