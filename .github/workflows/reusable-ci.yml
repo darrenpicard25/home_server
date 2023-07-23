@@ -43,9 +43,13 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and push Docker images
-        uses: docker/bake-action@v2.3.0
+        uses: docker/build-push-action@v4
         with:
           push: true
+          file: ./${{ inputs.service-name }}/Dockerfile
+          context: .
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ inputs.service-name }}:latest
+
           set: |
             *.cache-from=type=gha
             *.cache-to=type=gha,mode=max

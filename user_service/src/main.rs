@@ -13,8 +13,6 @@ struct HelloParams {
     name: Option<String>,
 }
 
-// Hello
-
 // e.g. `/hello?name=Darren`
 async fn handler_hello(Query(params): Query<HelloParams>) -> impl IntoResponse {
     println!("->> {:12} - hello handler: {:?}", "HANDLER", params);
