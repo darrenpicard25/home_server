@@ -32,7 +32,7 @@ jobs:
     with:
       service-name: "user_service"
     secrets:
-      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
   beer_service_build:
@@ -42,7 +42,7 @@ jobs:
     with:
       service-name: "beer_service"
     secrets:
-      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
   deploy:
@@ -54,8 +54,8 @@ jobs:
 
     uses: ./.github/workflows/deploy.yml
     secrets:
-      DROPLET_IP: ${{ secrets.DROPLET_IP }}
+      DROPLET_IP: ${{ vars.DROPLET_IP }}
       DROPLET_SSH_PRIVATE_KEY: ${{ secrets.DROPLET_SSH_PRIVATE_KEY }}
-      DROPLET_USER: ${{ secrets.DROPLET_USER }}
-      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+      DROPLET_USER: ${{ vars.DROPLET_USER }}
+      POSTGRES_USER: ${{ vars.POSTGRES_USER }}
       POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
