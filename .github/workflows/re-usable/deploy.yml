@@ -1,0 +1,47 @@
+name: Re-Usable Deploy Work Flow
+
+on:
+  workflow_call:
+    inputs:
+      should_run:
+        required: true
+        type: boolean
+    secrets:
+      DROPLET_IP:
+        required: true
+      DROPLET_SSH_PRIVATE_KEY:
+        required: true
+      DROPLET_USER:
+        required: true
+      POSTGRES_USER:
+        required: true
+      POSTGRES_PASSWORD:
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install sshpass
+        run: sudo apt-get install sshpass
+
+      - name: Copy docker-compose.yml to droplet
+        run: sshpass -v -p ${{ secrets.DROPLET_PASSWORD }} scp -o StrictHostKeyChecking=no docker-compose.yml ${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_IP }}:~
+
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ vars.DROPLET_IP }}
+          username: root
+          password: ${{ secrets.DROPLET_PASSWORD }}
+          script: |
+            cd ~
+            export POSTGRES_USER=${{ secrets.POSTGRES_USER }}
+            export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+            docker-compose down
+            docker-compose pull
+            docker-compose up -d

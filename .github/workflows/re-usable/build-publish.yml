@@ -1,4 +1,4 @@
-name: Re-Usable CI Work Flow
+name: Re-Usable Build/Publish Work Flow
 
 on:
   workflow_call:

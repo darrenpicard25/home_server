@@ -1,0 +1,4 @@
+on:
+  pull-request:
+    branches:
+      - main
