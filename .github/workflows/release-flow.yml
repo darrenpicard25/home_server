@@ -28,7 +28,7 @@ jobs:
   user_service_build:
     needs: changes
     if: ${{ needs.changes.outputs.user_service == 'true' }}
-    uses: ./.github/workflows/re-usable/build-publish.yml
+    uses: ./.github/workflows/build-publish.yml
     with:
       service-name: "user_service"
     secrets:
@@ -38,7 +38,7 @@ jobs:
   beer_service_build:
     needs: changes
     if: ${{ needs.changes.outputs.beer_service == 'true' }}
-    uses: ./.github/workflows/re-usable/build-publish.yml
+    uses: ./.github/workflows/build-publish.yml
     with:
       service-name: "beer_service"
     secrets:
@@ -52,7 +52,7 @@ jobs:
       (needs.user_service_build.result == 'success' || needs.user_service_build.result == 'skipped') &&
       (needs.beer_service_build.result == 'success' || needs.beer_service_build.result == 'skipped')
 
-    uses: ./.github/workflows/re-usable/deploy.yml
+    uses: ./.github/workflows/deploy.yml
     with:
       service-name: "beer_service"
     secrets:
