@@ -22,22 +22,29 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install sshpass
-        run: sudo apt-get install sshpass
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "${{secrets.DROPLET_SSH_PRIVATE_KEY}}" > ~/.ssh/github_action.key
+          chmod 600 ~/.ssh/github_action.key
+          cat >>~/.ssh/config <<END
+          Host home_server
+            HostName ${{secrets.DROPLET_IP}}
+            User ${{secrets.DROPLET_USER}}
+            IdentityFile ~/.ssh/github_action.key
+            StrictHostKeyChecking no
+          END
 
-      - name: Copy docker-compose.yml to droplet
-        run: sshpass -v -p ${{ secrets.DROPLET_PASSWORD }} scp -o StrictHostKeyChecking=no docker-compose.yml ${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_IP }}:~
+      - name: Send Docker Compose File
+        run: |
+          scp ./docker-compose.yml home_server:~
 
-      - name: Deploy
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ vars.DROPLET_IP }}
-          username: root
-          password: ${{ secrets.DROPLET_PASSWORD }}
-          script: |
-            cd ~
-            export POSTGRES_USER=${{ secrets.POSTGRES_USER }}
-            export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
-            docker-compose down
-            docker-compose pull
-            docker-compose up -d
+      - name: Re-run Docker Compose
+        run: |
+          ssh home_server
+          cd ~
+          export POSTGRES_USER=${{ secrets.POSTGRES_USER }}
+          export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+          docker-compose down
+          docker-compose pull
+          docker-compose up -d
