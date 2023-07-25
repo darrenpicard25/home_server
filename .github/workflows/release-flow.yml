@@ -54,7 +54,7 @@ jobs:
 
     uses: ./.github/workflows/deploy.yml
 
-    input:
+    inputs:
       DROPLET_IP: ${{ vars.DROPLET_IP }}
       DROPLET_USER: ${{ vars.DROPLET_USER }}
       POSTGRES_USER: ${{ vars.POSTGRES_USER }}

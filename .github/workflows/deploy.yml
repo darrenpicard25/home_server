@@ -36,8 +36,8 @@ jobs:
           chmod 600 ~/.ssh/github_action.key
           cat >>~/.ssh/config <<END
           Host home_server
-            HostName ${{ input.DROPLET_IP }}
-            User ${{ input.DROPLET_USER }}
+            HostName ${{ inputs.DROPLET_IP }}
+            User ${{ inputs.DROPLET_USER }}
             IdentityFile ~/.ssh/github_action.key
             StrictHostKeyChecking no
           END
@@ -51,7 +51,7 @@ jobs:
         run: |
           ssh home_server
           cd ~
-          export POSTGRES_USER=${{ input.POSTGRES_USER }}
+          export POSTGRES_USER=${{ inputs.POSTGRES_USER }}
           export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
           docker-compose down
           docker-compose pull
