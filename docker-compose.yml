@@ -12,7 +12,7 @@ services:
       - home_server_db:/var/lib/postgresql/data
 
   user_service:
-    image: user_service/latest
+    image: darren25/user_service:latest
     build: ./user_service
     ports:
       - "3000:3000"
@@ -20,7 +20,7 @@ services:
       - database
 
   beer_service:
-    image: user_service/latest
+    image: darren25/beer_service:latest
     build: ./beer_service
     ports:
       - "3001:3001"
