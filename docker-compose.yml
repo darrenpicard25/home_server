@@ -13,7 +13,6 @@ services:
 
   user_service:
     image: darren25/user_service:latest
-    build: ./user_service
     ports:
       - "3000:3000"
     depends_on:
@@ -21,7 +20,6 @@ services:
 
   beer_service:
     image: darren25/beer_service:latest
-    build: ./beer_service
     ports:
       - "3001:3001"
     depends_on:
