@@ -1,4 +1,5 @@
 on:
-  pull-request:
+  pull_request:
+    types: [opened, reopened]
     branches:
-      - main
+      - "main"
