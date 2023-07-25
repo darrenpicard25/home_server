@@ -16,10 +16,8 @@ on:
     secrets:
       DROPLET_SSH_PRIVATE_KEY:
         required: true
-        type: string
       POSTGRES_USER:
         required: true
-        type: string
 
 jobs:
   deploy:
