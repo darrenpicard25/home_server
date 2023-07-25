@@ -16,7 +16,7 @@ on:
     secrets:
       DROPLET_SSH_PRIVATE_KEY:
         required: true
-      POSTGRES_USER:
+      POSTGRES_PASSWORD:
         required: true
 
 jobs:
