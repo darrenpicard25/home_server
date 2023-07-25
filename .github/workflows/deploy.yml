@@ -51,6 +51,7 @@ jobs:
           cd
           ls -ah
           export POSTGRES_USER=${{ inputs.POSTGRES_USER }}
+          echo $POSTGRES_USER
           export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
           docker-compose down
           docker-compose pull
