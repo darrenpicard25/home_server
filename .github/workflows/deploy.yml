@@ -48,7 +48,8 @@ jobs:
       - name: Re-run Docker Compose
         run: |
           ssh home_server
-          cd ~
+          cd
+          ls -ah
           export POSTGRES_USER=${{ inputs.POSTGRES_USER }}
           export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
           docker-compose down
