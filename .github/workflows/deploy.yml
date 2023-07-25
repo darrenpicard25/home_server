@@ -2,17 +2,24 @@ name: Re-Usable Deploy Work Flow
 
 on:
   workflow_call:
-    secrets:
+    inputs:
       DROPLET_IP:
         required: true
-      DROPLET_SSH_PRIVATE_KEY:
-        required: true
+        type: string
       DROPLET_USER:
         required: true
+        type: string
       POSTGRES_USER:
         required: true
-      POSTGRES_PASSWORD:
+        type: string
+
+    secrets:
+      DROPLET_SSH_PRIVATE_KEY:
         required: true
+        type: string
+      POSTGRES_USER:
+        required: true
+        type: string
 
 jobs:
   deploy:
@@ -29,8 +36,8 @@ jobs:
           chmod 600 ~/.ssh/github_action.key
           cat >>~/.ssh/config <<END
           Host home_server
-            HostName ${{ secrets.DROPLET_IP }}
-            User ${{ secrets.DROPLET_USER }}
+            HostName ${{ input.DROPLET_IP }}
+            User ${{ input.DROPLET_USER }}
             IdentityFile ~/.ssh/github_action.key
             StrictHostKeyChecking no
           END
@@ -44,7 +51,7 @@ jobs:
         run: |
           ssh home_server
           cd ~
-          export POSTGRES_USER=${{ secrets.POSTGRES_USER }}
+          export POSTGRES_USER=${{ input.POSTGRES_USER }}
           export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
           docker-compose down
           docker-compose pull
