@@ -28,6 +28,12 @@ async fn handler_hello_2(Path(name): Path<String>) -> impl IntoResponse {
     format!("Hello, {name}! From handler 2 from User-Service")
 }
 
+async fn root_handler() -> impl IntoResponse {
+    println!("->> {:12} - root handler", "HANDLER");
+
+    "User Service"
+}
+
 #[tokio::main]
 async fn main() {
     const PORT: u16 = 3000;
@@ -35,6 +41,7 @@ async fn main() {
 
     println!("Starting Service on {:?}:{}", ADDRESS, PORT);
     let router = Router::new()
+        .route("/", get(root_handler))
         .route("/hello", get(handler_hello))
         .route("/hello/:name", get(handler_hello_2));
 
