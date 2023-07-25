@@ -14,7 +14,7 @@ on:
         type: string
 
     secrets:
-      DROPLET_SSH_PRIVATE_KEY:
+      DROPLET_SSH_PRIVATE_KEY_BASE64:
         required: true
       POSTGRES_PASSWORD:
         required: true
@@ -30,7 +30,7 @@ jobs:
       - name: Configure SSH
         run: |
           mkdir -p ~/.ssh/
-          echo "${{ secrets.DROPLET_SSH_PRIVATE_KEY }}" | base64 -d > ~/.ssh/github_action.key
+          echo "${{ secrets.DROPLET_SSH_PRIVATE_KEY_BASE64 }}" | base64 -d > ~/.ssh/github_action.key
           chmod 600 ~/.ssh/github_action.key
           cat >>~/.ssh/config <<END
           Host home_server
