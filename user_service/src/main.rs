@@ -6,8 +6,10 @@ use axum::{
     routing::get,
     Router,
 };
+use clap::Parser;
 use serde::Deserialize;
 
+mod app_config;
 #[derive(Debug, Deserialize)]
 struct HelloParams {
     name: Option<String>,
@@ -36,16 +38,16 @@ async fn root_handler() -> impl IntoResponse {
 
 #[tokio::main]
 async fn main() {
-    const PORT: u16 = 3000;
     const ADDRESS: Ipv4Addr = Ipv4Addr::UNSPECIFIED;
+    let app_config = app_config::AppConfig::parse();
 
-    println!("Starting Service on {:?}:{}", ADDRESS, PORT);
+    println!("Starting Service on {:?}:{}", ADDRESS, app_config.port);
     let router = Router::new()
         .route("/", get(root_handler))
         .route("/hello", get(handler_hello))
         .route("/hello/:name", get(handler_hello_2));
 
-    let address = SocketAddr::from((ADDRESS, PORT));
+    let address = SocketAddr::from((ADDRESS, app_config.port));
 
     axum::Server::bind(&address)
         .serve(router.into_make_service())

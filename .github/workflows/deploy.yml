@@ -41,15 +41,14 @@ jobs:
           END
           cat ~/.ssh/config
 
-      - name: Send Docker Compose File
+      - name: Send Configuration File
         run: |
-          scp ./docker-compose.yml home_server:~
+          scp ./docker-compose.yml ./nginx.conf home_server:~
 
       - name: Re-run Docker Compose
         run: |
           ssh home_server '
           cd
-          ls -ah
           export POSTGRES_USER=${{ inputs.POSTGRES_USER }}
           echo $POSTGRES_USER
           export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
