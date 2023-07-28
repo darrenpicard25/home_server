@@ -11,10 +11,9 @@ pub struct AppConfig {
 
     #[clap(default_value = "user_service_db")]
     pub database: String,
+    // #[clap(long)]
+    // pub database_password: String,
 
-    #[clap(long)]
-    pub database_password: String,
-
-    #[clap(long, short('u'))]
-    pub database_user: String,
+    // #[clap(long, short('u'))]
+    // pub database_user: String,
 }

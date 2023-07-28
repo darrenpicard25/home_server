@@ -5,3 +5,4 @@ server
 # Added by cargo
 
 /target
+.env
