@@ -7,6 +7,8 @@ services:
     environment:
       - POSTGRES_USER
       - POSTGRES_PASSWORD
+    networks:
+      - home_server_network
     ports:
       - "5432:5432"
     volumes:
@@ -15,6 +17,8 @@ services:
   user_service:
     image: darren25/user_service:latest
     container_name: "home_server_user_service"
+    networks:
+      - home_server_network
     ports:
       - "3000:3000"
     depends_on:
@@ -23,6 +27,8 @@ services:
   beer_service:
     image: darren25/beer_service:latest
     container_name: "home_server_beer_service"
+    networks:
+      - home_server_network
     ports:
       - "3001:3001"
     depends_on:
@@ -33,6 +39,8 @@ services:
     container_name: nginx_reverse_proxy
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - home_server_network
     ports:
       - 80:80
       - 443:443
@@ -44,3 +52,8 @@ services:
 volumes:
   home_server_db:
     driver: local
+
+networks:
+  home_server_network:
+    external: true
+    name: proxynet
