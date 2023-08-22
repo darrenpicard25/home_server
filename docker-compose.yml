@@ -12,19 +12,11 @@ services:
     volumes:
       - home_server_db:/var/lib/postgresql/data
 
-  user_service:
-    image: darren25/user_service:latest
-    container_name: "home_server_user_service"
+  member_portal:
+    image: darren25/member_portal:latest
+    container_name: "home_server_member_portal"
     ports:
-      - "3000:3000"
-    depends_on:
-      - database
-
-  beer_service:
-    image: darren25/beer_service:latest
-    container_name: "home_server_beer_service"
-    ports:
-      - "3001:3001"
+      - "3002:3002"
     depends_on:
       - database
 
@@ -37,8 +29,7 @@ services:
       - 80:80
       - 443:443
     depends_on:
-      - beer_service
-      - user_service
+      - member_portal
 
 
 volumes:

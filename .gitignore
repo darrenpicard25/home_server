@@ -1,8 +1,10 @@
 main
 .vscode
-server
 
 # Added by cargo
 
 /target
+/dist
 .env
+
+node_modules

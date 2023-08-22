@@ -1,5 +1,35 @@
 [workspace]
-members = [
-    "user_service",
-    "beer_service"
-]
+members = ["app", "server", "front"]
+resolver = "2"
+
+
+[workspace.dependencies]
+axum = "0.6"
+clap = { version = "4.3", default-features = false, features = [
+    "derive",
+    "std",
+] }
+serde = { version = "1.0", default-features = false, features = ["derive"] }
+tokio = { version = "1.29", default-features = false, features = ["full"] }
+leptos = { version = "0.4", default-features = false }
+leptos_meta = { version = "0.4", default-features = false }
+leptos_router = { version = "0.4", default-features = false }
+leptos_dom = { version = "0.4", default-features = false }
+leptos_axum = { version = "0.4", default-features = false }
+# styled = { version = "0.1" }
+# stylist = { version = "0.12" }
+# stylers = { git = "https://github.com/abishekatp/stylers.git", branch = "main" }
+
+
+[[workspace.metadata.leptos]]
+name = "member_portal"
+bin-package = "server-package"
+lib-package = "front-package"
+output-name = "member_portal"
+# The site root folder is where cargo-leptos generate all output. WARNING: all content of this folder will be erased on a rebuild. Use it in your server setup.
+site-root = "target/site"
+# The site-root relative folder where all compiled output (JS, WASM and CSS) is written
+# Defaults to pkg	
+site-pkg-dir = "pkg"
+# [Optional] The source CSS file. If it ends with .sass or .scss then it will be compiled by dart-sass into CSS. The CSS is optimized by Lightning CSS before being written to <site-root>/<site-pkg>/app.css
+style-file = "style/output.css"
