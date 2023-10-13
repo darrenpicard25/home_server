@@ -1,43 +1,54 @@
 use leptos::*;
 use leptos_meta::*;
+use leptos_router::*;
 
-use crate::components::default_button::DefaultButton;
-
-mod components;
+pub mod error_template;
 
 #[component]
-pub fn App(cx: Scope) -> impl IntoView {
-    provide_meta_context(cx);
-    let (count, set_count) = create_signal(cx, 0);
+pub fn App() -> impl IntoView {
+    // Provides context that manages stylesheets, titles, meta tags, etc.
+    provide_meta_context();
 
-    let on_click = move |_| {
-        set_count.update(|current_value| {
-            *current_value += 1;
-        })
-    };
+    leptos::view! {
+
+
+        // injects a stylesheet into the document <head>
+        // id=leptos means cargo-leptos will hot-reload this stylesheet
+        <Stylesheet id="leptos" href="/pkg/start-axum-workspace.css"/>
+
+        // sets the document title
+        <Title text="Welcome to Leptos"/>
+
+        // content for this welcome page
+        <Router>
+            <main>
+                <Routes>
+                    <Route path="" view=HomePage/>
+                </Routes>
+            </main>
+        </Router>
+    }
+}
+
+/// Renders the home page of your application.
+#[component]
+fn HomePage() -> impl IntoView {
+    // Creates a reactive value to update the button
+    let (count, set_count) = create_signal(0);
+    let on_click = move |_| set_count.update(|count| *count += 1);
 
     view! {
-        cx,
-        // id=leptos means cargo-leptos will hot-reload this stylesheet
-        <Stylesheet id="leptos" href="/pkg/member_portal.css"/>
-        <Title text="Cargo Leptos" />
-        <div class="grid grid-cols-6 grid-rows-4">
-            <div class="col-span-6 row-span-1 bg-color4">
-                <h1 class="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">"Smokey Olive"</h1>
-            </div>
-            <div class="grid grid-cols-3 row-span-1 col-span-5">
-                <h1 class="col-span-1">"Hi from your Leptos WASM! With live reload"</h1>
-                <div class="col-span-1">
-                    <DefaultButton on_click text="Click Me"/>
-                </div>
-                <h3 class="col-span-1">{count}</h3>
-            </div>
-            <div class="col-span-1 row-span-1" >
-                <h3>"Nav Bar"</h3>
-            </div>
-            <div class="col-span-6 row-span-1 bg-color1" >
-                <h3>"Footer"</h3>
-            </div>
-        </div>
-    }
+    <div class="max-w-md py-4 px-8 bg-white shadow-lg rounded-lg my-20 center m-auto">
+      <div>
+        <h2 class="text-gray-800 text-3xl font-semibold">"Welcome to Leptos!"</h2>
+        <p class="mt-2 text-gray-600">"Current Count: "{count}</p>
+        <button
+            class="middle none center mr-4 rounded-lg bg-blue-500 py-3 px-6 font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+            data-ripple-light="true"
+            on:click=on_click
+        >"Button"
+        </button>
+      </div>
+    </div>
+        }
 }
