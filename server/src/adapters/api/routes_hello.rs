@@ -21,7 +21,7 @@ pub fn routes() -> Router<AppState> {
 
 // e.g. `/hello?name=Darren`
 async fn handler_hello(Query(params): Query<HelloParams>) -> impl IntoResponse {
-    tracing::info!("->> {:12} - hello handler: {:?}", "HANDLER", params);
+    log::info!("->> {:12} - hello handler: {:?}", "HANDLER", params);
     let name = params.name.as_deref().unwrap_or("World");
 
     format!("Hello, {}!", name)
@@ -29,7 +29,7 @@ async fn handler_hello(Query(params): Query<HelloParams>) -> impl IntoResponse {
 
 // e.g. `/hello/Darren`
 async fn handler_hello_2(Path(name): Path<String>) -> impl IntoResponse {
-    tracing::info!("->> {:12} - hello handler 2: {:?}", "HANDLER", name);
+    log::info!("->> {:12} - hello handler 2: {:?}", "HANDLER", name);
 
     format!("Hello, {}! From handler 2", name)
 }

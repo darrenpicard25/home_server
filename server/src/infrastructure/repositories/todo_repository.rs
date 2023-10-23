@@ -49,7 +49,7 @@ impl TodoRepository {
 #[async_trait]
 impl TodoRepositoryPort for TodoRepository {
     async fn list(&self) -> RepositoryResult<Vec<Todo>> {
-        tracing::debug!("TodoRepository.list");
+        log::debug!("TodoRepository.list");
 
         let documents = sqlx::query_as::<_, TodoDocument>("SELECT * FROM todos")
             .fetch_all(&self.db.pool())
@@ -60,14 +60,14 @@ impl TodoRepositoryPort for TodoRepository {
     }
 
     async fn find_by_id(&self, id: i64) -> RepositoryResult<Todo> {
-        tracing::debug!("TodoRepository.find_by_id | {id}");
+        log::debug!("TodoRepository.find_by_id | {id}");
 
         let document = sqlx::query_as::<_, TodoDocument>("SELECT * FROM todos WHERE id = $1")
             .bind(&id)
             .fetch_one(&self.db.pool())
             .await
             .map_err(|e| {
-                tracing::error!("{e}");
+                log::error!("{e}");
                 match e {
                     Error::RowNotFound => RepositoryError::NotFound,
                     e => RepositoryError::Unknown(e.to_string()),
@@ -78,7 +78,7 @@ impl TodoRepositoryPort for TodoRepository {
     }
 
     async fn update_one(&self, input: UpdateInput) -> RepositoryResult<Todo> {
-        tracing::debug!("TodoRepository.update_one | {input:?}");
+        log::debug!("TodoRepository.update_one | {input:?}");
 
         let document = self.find_by_id(input.id).await?;
         let now = OffsetDateTime::now_utc();
@@ -100,7 +100,7 @@ impl TodoRepositoryPort for TodoRepository {
         .fetch_one(&self.db.pool())
         .await
         .map_err(|e| {
-            tracing::error!("{e}");
+            log::error!("{e}");
             match e {
                 Error::RowNotFound => RepositoryError::NotFound,
                 e => RepositoryError::Unknown(e.to_string()),
@@ -111,7 +111,7 @@ impl TodoRepositoryPort for TodoRepository {
     }
 
     async fn create(&self, input: CreateInput) -> RepositoryResult<Todo> {
-        tracing::debug!("TodoRepository.create | {input:?}");
+        log::debug!("TodoRepository.create | {input:?}");
 
         let now = OffsetDateTime::now_utc();
         let now = PrimitiveDateTime::new(now.date(), now.time());

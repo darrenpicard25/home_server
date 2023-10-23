@@ -8,7 +8,7 @@ pub async fn handler(
     State(AppState { todo_use_cases, .. }): State<AppState>,
     Path(id): Path<i64>,
 ) -> ApiResult<ApiTodo> {
-    tracing::info!("Get /todo/{id}");
+    log::info!("Get /todo/{id}");
 
     Ok(todo_use_cases.get.execute(id).await?.into())
 }

@@ -18,7 +18,7 @@ pub async fn handler(
     State(AppState { todo_use_cases, .. }): State<AppState>,
     Json(payload): Json<CreatePayload>,
 ) -> ApiResult<ApiTodo> {
-    tracing::info!("Post /todo | {payload:?}");
+    log::info!("Post /todo | {payload:?}");
 
     let input = CreateTodoInput {
         title: payload.title,

@@ -22,7 +22,7 @@ pub async fn handler(
     Path(id): Path<i64>,
     Json(payload): Json<UpdatePayload>,
 ) -> ApiResult<ApiTodo> {
-    tracing::info!("Patch /todo/{id} | {payload:?}");
+    log::info!("Patch /todo/{id} | {payload:?}");
 
     let input = UpdateTodoInput {
         title: payload.title,

@@ -7,7 +7,7 @@ use super::ApiTodo;
 pub async fn handler(
     State(AppState { todo_use_cases, .. }): State<AppState>,
 ) -> ApiResult<Json<Vec<ApiTodo>>> {
-    tracing::info!("Get /todo");
+    log::info!("Get /todo");
 
     Ok(Json(
         todo_use_cases

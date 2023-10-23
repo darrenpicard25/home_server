@@ -33,7 +33,7 @@ impl App {
 /// Methods
 impl App {
     pub async fn run(&self) -> Result<(), ServiceStartupError> {
-        tracing::info!("Starting Server on: {}", self.address);
+        log::info!("Starting Server on: {}", self.address);
 
         let conf = get_configuration(None).await.unwrap();
         let leptos_options = conf.leptos_options;

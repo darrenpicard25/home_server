@@ -19,12 +19,12 @@ impl Database {
     pub async fn new(connection_string: &str) -> Result<Self, ServiceStartupError> {
         let options = PgConnectOptions::from_str(connection_string)
             .map_err(|e| {
-                tracing::error!("{e}");
+                log::error!("{e}");
 
                 ServiceStartupError::DatabaseConnection(e.to_string())
             })?
-            .log_statements(tracing::log::LevelFilter::Debug)
-            .log_slow_statements(tracing::log::LevelFilter::Warn, Duration::from_millis(500));
+            .log_statements(log::LevelFilter::Debug)
+            .log_slow_statements(log::LevelFilter::Warn, Duration::from_millis(500));
 
         let pool = PgPoolOptions::new()
             .max_connections(5)
@@ -33,7 +33,7 @@ impl Database {
             .map_err(|e| ServiceStartupError::DatabaseConnection(e.to_string()))?;
 
         sqlx::migrate!().run(&pool).await.map_err(|e| {
-            tracing::error!("{e}");
+            log::error!("{e}");
             ServiceStartupError::DatabaseMigration
         })?;
 

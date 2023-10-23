@@ -17,7 +17,7 @@ mod infrastructure;
 
 #[tokio::main]
 async fn main() -> Result<(), ServiceStartupError> {
-    tracing_subscriber::fmt().init();
+    simple_logger::init_with_level(log::Level::Info).expect("couldn't initialize logging");
 
     let app_config = AppConfig::parse();
     let addr = SocketAddr::from((Ipv4Addr::LOCALHOST, 8000));

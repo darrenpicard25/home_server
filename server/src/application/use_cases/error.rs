@@ -14,7 +14,7 @@ impl From<RepositoryError> for UseCaseError {
         match value {
             RepositoryError::NotFound => Self::NotFound,
             RepositoryError::Unknown(s) => {
-                tracing::error!("Unknown error occurred: {s}");
+                log::error!("Unknown error occurred: {s}");
 
                 Self::Unknown
             }

@@ -49,14 +49,14 @@ impl UserRepository {
 #[async_trait]
 impl UserRepositoryPort for UserRepository {
     async fn find_by_id(&self, id: i64) -> RepositoryResult<User> {
-        tracing::debug!("UserRepository.find_by_id | {id}");
+        log::debug!("UserRepository.find_by_id | {id}");
 
         let document = sqlx::query_as::<_, UserDocument>("SELECT * FROM users WHERE id = $1")
             .bind(&id)
             .fetch_one(&self.db.pool())
             .await
             .map_err(|e| {
-                tracing::error!("{e}");
+                log::error!("{e}");
                 match e {
                     Error::RowNotFound => RepositoryError::NotFound,
                     e => RepositoryError::Unknown(e.to_string()),
@@ -67,7 +67,7 @@ impl UserRepositoryPort for UserRepository {
     }
 
     async fn find_by_email(&self, email: String) -> RepositoryResult<Option<User>> {
-        tracing::debug!("UserRepository.find_by_email | {email}");
+        log::debug!("UserRepository.find_by_email | {email}");
 
         let document = sqlx::query_as::<_, UserDocument>("SELECT * FROM users WHERE email = $1")
             .bind(email)
@@ -82,7 +82,7 @@ impl UserRepositoryPort for UserRepository {
     }
 
     async fn update_one(&self, id: i64, input: UpdateInput) -> RepositoryResult<User> {
-        tracing::debug!("UserRepository.update_one | {id} | {input:?}");
+        log::debug!("UserRepository.update_one | {id} | {input:?}");
 
         let user = self.find_by_id(id).await?;
         let now = OffsetDateTime::now_utc();
@@ -104,7 +104,7 @@ impl UserRepositoryPort for UserRepository {
         .fetch_one(&self.db.pool())
         .await
         .map_err(|e| {
-            tracing::error!("{e}");
+            log::error!("{e}");
             match e {
                 Error::RowNotFound => RepositoryError::NotFound,
                 e => RepositoryError::Unknown(e.to_string()),
@@ -115,7 +115,7 @@ impl UserRepositoryPort for UserRepository {
     }
 
     async fn create(&self, input: CreateInput) -> RepositoryResult<User> {
-        tracing::debug!("UserRepository.create | {input:?}");
+        log::debug!("UserRepository.create | {input:?}");
 
         let now = OffsetDateTime::now_utc();
         let now = PrimitiveDateTime::new(now.date(), now.time());
